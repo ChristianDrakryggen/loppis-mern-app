@@ -14,14 +14,17 @@ const InsideStore = (props) => {
   const [storeProductsIds, setStoreProductsIds] = useState([]);
   const [products, setProducts] = useState([]);
 
+  //Sets the store state to the item in the Stores.getStores()-array to the item that has an id that matches the id from the url param
   useEffect(() => {
     setStore(storesData.find((store) => store.id.toString() === id));
   }, []);
 
+  //Creates an array of ids retieved from the stores (store state) products array
   useEffect(() => {
     setStoreProductsIds(store.products);
   }, [store]);
 
+  //Sets the products state to an array of products which ids mathes the ids from the storeProductIds (storeProductIds state) array
   useEffect(() => {
     if (storeProductsIds)
       setProducts(
@@ -31,6 +34,7 @@ const InsideStore = (props) => {
       );
   }, [storeProductsIds]);
 
+  //Adds a product object to the cart and assigns it a counter property
   const addToCart = (product) => {
     const same = basketContext.basket.filter((item) => item === product);
     Object.assign(product, {
@@ -48,7 +52,7 @@ const InsideStore = (props) => {
       <div>
         {products.map((product) => (
           <div key={product.id}>
-            <p>{product.name}</p>
+            <p>{`${product.name} - ${product.price} kr`}</p>
             <button onClick={() => addToCart(product)}>Add to cart</button>
           </div>
         ))}

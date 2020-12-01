@@ -16,6 +16,7 @@ const Navbar = () => {
     authContext.setIsAuthenticated(false);
   };
 
+  //Navbar to return if authContext.isAuthenticated is true
   const authNavbar = () => {
     return (
       <>
@@ -31,12 +32,21 @@ const Navbar = () => {
           <p style={{ fontWeight: "bold" }}>
             Items in cart: <span>{basketContext.basket.length}</span>
           </p>
-          <button
-            style={linkStyle()}
-            onClick={() => basketContext.setShowBasket(true)}
-          >
-            Show basket
-          </button>
+          {basketContext.showBasket ? (
+            <button
+              style={linkStyle()}
+              onClick={() => basketContext.setShowBasket(false)}
+            >
+              Hide basket
+            </button>
+          ) : (
+            <button
+              style={linkStyle()}
+              onClick={() => basketContext.setShowBasket(true)}
+            >
+              Show basket
+            </button>
+          )}
         </div>
         <div style={{ display: "flex" }}>
           <NavLink to="/checkout">
@@ -50,6 +60,7 @@ const Navbar = () => {
     );
   };
 
+  //Navbar to return if authContext.isAuthenticated is false
   const unAuthNavbar = () => {
     return (
       <>
@@ -68,12 +79,21 @@ const Navbar = () => {
           <p style={{ fontWeight: "bold" }}>
             Items in cart: <span>{basketContext.basket.length}</span>
           </p>
-          <button
-            style={linkStyle()}
-            onClick={() => basketContext.setShowBasket(true)}
-          >
-            Show basket
-          </button>
+          {basketContext.showBasket ? (
+            <button
+              style={linkStyle()}
+              onClick={() => basketContext.setShowBasket(false)}
+            >
+              Hide basket
+            </button>
+          ) : (
+            <button
+              style={linkStyle()}
+              onClick={() => basketContext.setShowBasket(true)}
+            >
+              Show basket
+            </button>
+          )}
         </div>
         <div>
           <NavLink to="/checkout">
