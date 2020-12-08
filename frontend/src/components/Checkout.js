@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { BasketContext } from "../context/BasketContext";
 import Stores from "../staticData/Stores";
+import UserService from "../services/UserService";
 
 const Checkout = () => {
   const [stores, setStores] = useState([]);
@@ -11,7 +12,7 @@ const Checkout = () => {
 
   const removeFromBasket = (product) => {
     basketContext.setBasket(
-      [...basketContext.basket].filter((p) => p.id !== product.id)
+      [...basketContext.basket].filter((p) => p._id !== product._id)
     );
   };
 
@@ -19,7 +20,7 @@ const Checkout = () => {
     alert(JSON.stringify(store));
     alert(
       JSON.stringify(
-        basket.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
+        basket.filter((v, i, a) => a.findIndex((t) => t._id === v._id) === i)
       )
     );
     basketContext.setBasket(
@@ -27,8 +28,16 @@ const Checkout = () => {
     );
   };
 
+  const getStores = () => {
+    UserService.getUsers().then((data) => {
+      if (data) {
+        setStores(data.users);
+      }
+    });
+  };
+
   useEffect(() => {
-    setStores(Stores.getStores());
+    getStores();
   }, []);
 
   return (
@@ -39,27 +48,27 @@ const Checkout = () => {
           {stores.map((store) => {
             if (
               store.products.some((p) =>
-                basketContext.basket.some((product) => p === product.id)
+                basketContext.basket.some((product) => p === product._id)
               )
             ) {
               return (
                 <div
-                  key={store.id}
+                  key={store._id}
                   style={{ borderBottom: "2px solid black", padding: "20px" }}
                 >
-                  <h3>{store.name}</h3>
+                  <h3>{store.username}</h3>
                   <div>
                     {basketContext.basket
                       .filter((product) =>
-                        store.products.some((p) => p === product.id)
+                        store.products.some((p) => p === product._id)
                       )
                       .slice()
                       .filter(
-                        (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+                        (v, i, a) => a.findIndex((t) => t._id === v._id) === i
                       )
                       .map((product) => (
                         <div
-                          key={product.id}
+                          key={product._id}
                           style={{
                             display: "flex",
                             padding: "10px",
@@ -85,7 +94,7 @@ const Checkout = () => {
                     <div>
                       <p>{`Total: ${basketContext.basket
                         .filter((product) =>
-                          store.products.some((p) => p === product.id)
+                          store.products.some((p) => p === product._id)
                         )
                         .map((product) => product.price)
                         .reduce(
@@ -97,7 +106,7 @@ const Checkout = () => {
                         onClick={() =>
                           checkout(
                             basketContext.basket.filter((product) =>
-                              store.products.some((p) => p === product.id)
+                              store.products.some((p) => p === product._id)
                             ),
                             store
                           )

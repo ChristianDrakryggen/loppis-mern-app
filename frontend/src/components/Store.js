@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 
 const Store = (props) => {
   const history = useHistory();
-  const { name, id } = props.store;
+  const { username, _id } = props.store;
 
   const goToStore = (id) => {
     history.push(`/insidestore/${id}`);
@@ -17,8 +17,8 @@ const Store = (props) => {
         padding: "0px 20px 20px",
       }}
     >
-      <h1>{name}</h1>
-      <button onClick={() => goToStore(id)}>To store</button>
+      <h1>{username}</h1>
+      <button onClick={() => goToStore(_id)}>To store</button>
     </div>
   );
 };

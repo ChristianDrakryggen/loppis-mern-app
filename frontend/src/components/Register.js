@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import AuthService from "../services/AuthService";
 
 const Register = () => {
   const history = useHistory();
 
   const [user, setUser] = useState({ username: "", password: "" });
+
+  //message state to be used for snackbar notifications later
+  const [message, setMessage] = useState(null);
 
   const onChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -12,8 +16,13 @@ const Register = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    alert(JSON.stringify(user));
-    history.push("/login");
+    AuthService.register(user).then((data) => {
+      const { message } = data;
+      setMessage(message);
+      if (!message.msgError) {
+        history.push("/login");
+      }
+    });
   };
 
   console.log(user);
@@ -31,6 +40,7 @@ const Register = () => {
         />
         <input
           name="password"
+          type="password"
           value={user.password}
           onChange={onChange}
           required

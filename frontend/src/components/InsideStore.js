@@ -2,20 +2,21 @@ import React, { useState, useEffect, useContext } from "react";
 import Stores from "../staticData/Stores";
 import Products from "../staticData/Products";
 import { BasketContext } from "../context/BasketContext";
+import ProductService from "../services/ProductService";
 
 const InsideStore = (props) => {
   const basketContext = useContext(BasketContext);
 
   const { id } = props.match.params;
 
-  const [storesData, setStoresData] = useState(Stores.getStores());
-  const [productsData, setProductsData] = useState(Products.getProducts());
-  const [store, setStore] = useState({});
-  const [storeProductsIds, setStoreProductsIds] = useState([]);
+  //const [storesData, setStoresData] = useState(Stores.getStores());
+  //const [productsData, setProductsData] = useState(Products.getProducts());
+  //const [storeProductsIds, setStoreProductsIds] = useState([]);
+  const [store, setStore] = useState("");
   const [products, setProducts] = useState([]);
 
   //Sets the store state to the item in the Stores.getStores()-array to the item that has an id that matches the id from the url param
-  useEffect(() => {
+  /*useEffect(() => {
     setStore(storesData.find((store) => store.id.toString() === id));
   }, []);
 
@@ -32,13 +33,23 @@ const InsideStore = (props) => {
           storeProductsIds.some((id) => id === product.id)
         )
       );
-  }, [storeProductsIds]);
+  }, [storeProductsIds]);*/
+
+  useEffect(() => {
+    ProductService.getProducts({ _id: id }).then((data) => {
+      if (data) {
+        setProducts(data.products);
+        setStore(data.username);
+      }
+    });
+  }, [id]);
 
   //Adds a product object to the cart and assigns it a counter property
   const addToCart = (product) => {
     const same = basketContext.basket.filter((item) => item === product);
     Object.assign(product, {
       count: same.length + 1,
+      price: parseInt(product.price),
     });
     basketContext.setBasket([...basketContext.basket, product]);
   };
@@ -47,11 +58,11 @@ const InsideStore = (props) => {
 
   return (
     <div>
-      <h1>{store.name}</h1>
+      <h1>{store}</h1>
       <h3>Products</h3>
       <div>
         {products.map((product) => (
-          <div key={product.id}>
+          <div key={product._id}>
             <p>{`${product.name} - ${product.price} kr`}</p>
             <button onClick={() => addToCart(product)}>Add to cart</button>
           </div>

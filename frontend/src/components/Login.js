@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import AuthService from "../services/AuthService";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
@@ -13,12 +14,17 @@ const Login = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    alert(JSON.stringify(user));
-    authContext.setIsAuthenticated(true);
-    history.push("/account");
+    AuthService.login(user).then((data) => {
+      const { isAuthenticated, user } = data;
+      if (isAuthenticated) {
+        authContext.setUser(user);
+        authContext.setIsAuthenticated(isAuthenticated);
+        history.push("/account");
+      }
+    });
   };
 
-  console.log(user);
+  console.log(authContext.isAuthenticated);
 
   return (
     <div>
@@ -33,6 +39,7 @@ const Login = () => {
         />
         <input
           name="password"
+          type="password"
           value={user.password}
           onChange={onChange}
           required

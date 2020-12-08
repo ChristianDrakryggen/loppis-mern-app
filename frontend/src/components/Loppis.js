@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Stores from "../staticData/Stores";
 import Store from "./Store";
+import UserService from "../services/UserService";
 
 const Loppis = () => {
   const [stores, setStores] = useState([]);
 
+  const getStores = () => {
+    UserService.getUsers().then((data) => {
+      setStores(data.users);
+    });
+  };
+
   useEffect(() => {
-    setStores(Stores.getStores());
+    getStores();
   }, []);
 
   console.log(stores);
@@ -16,7 +23,7 @@ const Loppis = () => {
       <h1>Loppis</h1>
       <div style={{ display: "flex" }}>
         {stores.map((store) => (
-          <Store key={store.id} store={store} />
+          <Store key={store._id} store={store} />
         ))}
       </div>
     </>

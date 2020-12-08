@@ -1,19 +1,27 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import Basket from "./Basket";
 import { BasketContext } from "../context/BasketContext";
+import { AuthContext } from "../context/AuthContext";
+import AuthService from "../services/AuthService";
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
   const basketContext = useContext(BasketContext);
+  const history = useHistory();
 
   const linkStyle = () => {
     return { margin: "10px" };
   };
 
   const logOut = () => {
-    authContext.setIsAuthenticated(false);
+    AuthService.logout().then((data) => {
+      if (data.success) {
+        authContext.setUser(data.user);
+        authContext.setIsAuthenticated(false);
+        history.push("/login");
+      }
+    });
   };
 
   //Navbar to return if authContext.isAuthenticated is true
