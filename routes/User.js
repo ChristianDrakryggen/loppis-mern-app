@@ -63,12 +63,12 @@ userRouter.post(
   passport.authenticate("local", { session: false }),
   (req, res) => {
     if (req.isAuthenticated()) {
-      const { _id, username } = req.user;
+      const { _id, username, firstname, lastname, email, phone } = req.user;
       const token = signToken(_id);
       res.cookie("access-token", token, { httpOnly: true, sameSite: true });
       res.status(200).json({
         isAuthenticated: true,
-        user: { _id, username },
+        user: { _id, username, firstname, lastname, email, phone },
         message: { msgBody: "Successfully logged in", msgError: false },
       });
     }
@@ -80,8 +80,13 @@ userRouter.get(
   "/user/authenticated",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { _id, username } = req.user;
-    res.status(200).json({ isAuthenticated: true, user: { _id, username } });
+    const { _id, username, firstname, lastname, email, phone } = req.user;
+    res
+      .status(200)
+      .json({
+        isAuthenticated: true,
+        user: { _id, username, firstname, lastname, email, phone },
+      });
   }
 );
 
@@ -109,6 +114,30 @@ userRouter.get("/getallusers", (req, res) => {
     }
   });
 });
+
+//UpdateUser
+userRouter.put(
+  "/user/updateuser",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { firstname, lastname, email, phone } = req.body;
+    User.findByIdAndUpdate(
+      req.user._id,
+      { firstname, lastname, email, phone },
+      (err) => {
+        if (err) {
+          res.status(500).json({
+            message: { msgBody: "An error ocuurred", msgError: true },
+          });
+        } else {
+          res.status(200).json({
+            message: { msgBody: "Successfully updated user", msgError: false },
+          });
+        }
+      }
+    );
+  }
+);
 
 //Post new address after checking auth trough jwt-strategy
 userRouter.post(

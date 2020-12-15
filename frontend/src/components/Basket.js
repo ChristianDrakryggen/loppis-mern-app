@@ -6,7 +6,7 @@ const Basket = () => {
 
   const removeFromBasket = (product) => {
     basketContext.setBasket(
-      basketContext.basket.filter((item) => item.id !== product.id)
+      basketContext.basket.filter((item) => item._id !== product._id)
     );
   };
 
@@ -28,7 +28,7 @@ const Basket = () => {
                 //filter function before map to retrieve only the last added item with a specific id (aka the item with the highest count value),
                 //slice() before filter as a precaution to not modify state directly
                 .slice()
-                .filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
+                .filter((v, i, a) => a.findIndex((t) => t._id === v._id) === i)
                 .map((product) => (
                   <div
                     key={product.id}
