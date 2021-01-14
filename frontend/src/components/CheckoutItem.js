@@ -43,11 +43,19 @@ const CheckoutItem = (props) => {
 
   useEffect(() => {
     if (order.storeOwnerId !== "") {
-      OrderService.newOrder(order).then((data) => {
-        if (data && data.message) {
-          setMessage(data.message);
-        }
-      });
+      OrderService.newOrder(order)
+        .then((data) => {
+          if (data && data.message) {
+            setMessage(data.message);
+          }
+        })
+        .then(() => {
+          OrderService.newOrderHistoryItem(order).then((data) => {
+            if (data && data.message) {
+              setMessage(data.message);
+            }
+          });
+        });
       basketContext.setBasket(
         [...basketContext.basket].filter(
           (product) => !order.products.includes(product)

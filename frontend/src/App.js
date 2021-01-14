@@ -9,6 +9,8 @@ import Register from "./components/Register";
 import Checkout from "./components/Checkout";
 import Account from "./components/Account";
 import InsideStore from "./components/InsideStore";
+import PrivateRoute from "./hocs/PrivateRoute";
+import UnPrivateRoute from "./hocs/UnPrivateRoute";
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -21,9 +23,9 @@ function App() {
     <Router>
       <Navbar />
       <Route exact path="/" component={Loppis} />
-      <Route path="/account" component={Account} />
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
+      <PrivateRoute path="/account" component={Account} />
+      <UnPrivateRoute path="/login" component={Login} />
+      <UnPrivateRoute path="/register" component={Register} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/insidestore/:id" component={InsideStore} />
     </Router>

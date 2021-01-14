@@ -81,12 +81,10 @@ userRouter.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { _id, username, firstname, lastname, email, phone } = req.user;
-    res
-      .status(200)
-      .json({
-        isAuthenticated: true,
-        user: { _id, username, firstname, lastname, email, phone },
-      });
+    res.status(200).json({
+      isAuthenticated: true,
+      user: { _id, username, firstname, lastname, email, phone },
+    });
   }
 );
 
@@ -168,6 +166,37 @@ userRouter.post(
         });
       }
     });
+  }
+);
+
+//Update address after checking auth through jwt-strategy
+userRouter.put(
+  "/user/updateaddress",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Address.findByIdAndUpdate(
+      req.body._id,
+      {
+        street: req.body.street,
+        zipCode: req.body.zipCode,
+        town: req.body.town,
+        country: req.body.country,
+      },
+      (err) => {
+        if (err) {
+          res
+            .status(500)
+            .json({ message: { msgBody: "An error occured", msgError: true } });
+        } else {
+          res.status(200).json({
+            message: {
+              msgBody: "Successfully updated address",
+              msgError: false,
+            },
+          });
+        }
+      }
+    );
   }
 );
 
@@ -265,6 +294,30 @@ userRouter.post("/user/getproducts", (req, res) => {
     });
 });
 
+//Remove product
+userRouter.post(
+  "/user/removeproduct",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    req.user.products.pull({ _id: req.body._id });
+    req.user.save((err) => {
+      if (err) {
+        res
+          .status(500)
+          .json({ message: { msgBody: "An error occured", msgError: true } });
+      } else {
+        res.status(200).json({
+          message: {
+            msgBody: "Successfully removed product",
+            mesError: false,
+          },
+        });
+      }
+    });
+  }
+);
+
+//ORDERS
 //Posts new order and saves it to user specified through req.body
 userRouter.post("/user/neworder", (req, res) => {
   const order = new Order(req.body);
@@ -301,6 +354,38 @@ userRouter.post("/user/neworder", (req, res) => {
   });
 });
 
+//Posts new order history item
+userRouter.post(
+  "/user/neworderhistoryitem",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const order = new Order(req.body);
+    order.save((err) => {
+      if (err) {
+        res
+          .status(500)
+          .json({ message: { msgBody: "An error occured", msgError: true } });
+      } else {
+        req.user.orderHistory.push(order);
+        req.user.save((err) => {
+          if (err) {
+            res.status(500).json({
+              message: { msgBody: "An error occured", msgError: true },
+            });
+          } else {
+            res.status(200).json({
+              message: {
+                msgBody: "Successfully added new order history item",
+                msgError: false,
+              },
+            });
+          }
+        });
+      }
+    });
+  }
+);
+
 //Gets the loggedin users orders after checking auth through jwt strategy
 userRouter.get(
   "/user/getorders",
@@ -317,6 +402,50 @@ userRouter.get(
           res.status(200).json({ orders: user.orders, isAuthenticated: true });
         }
       });
+  }
+);
+
+//Gets order history array for authenticated user
+userRouter.get(
+  "/user/getorderhistory",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findById({ _id: req.user._id })
+      .populate("orderHistory")
+      .exec((err, user) => {
+        if (err) {
+          res
+            .status(500)
+            .json({ message: { msgBody: "An error occured", msgError: true } });
+        } else {
+          res
+            .status(200)
+            .json({ orderHistory: user.orderHistory, isAuthenticated: true });
+        }
+      });
+  }
+);
+
+//Remove order
+userRouter.post(
+  "/user/removeorder",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    req.user.orders.pull({ _id: req.body._id });
+    req.user.save((err) => {
+      if (err) {
+        res
+          .status(500)
+          .json({ message: { msgBody: "An error occured", msgError: true } });
+      } else {
+        res.status(200).json({
+          message: {
+            msgBody: "Successfully removed order",
+            mesError: false,
+          },
+        });
+      }
+    });
   }
 );
 

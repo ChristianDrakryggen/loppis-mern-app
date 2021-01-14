@@ -38,6 +38,12 @@ const UserSchema = mongoose.Schema({
       ref: "Order",
     },
   ],
+  orderHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+    },
+  ],
 });
 
 //Runs before every save of a User to hash/encrypt password if password has changed
