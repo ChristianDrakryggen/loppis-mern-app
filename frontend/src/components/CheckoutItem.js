@@ -51,11 +51,13 @@ const CheckoutItem = (props) => {
           }
         })
         .then(() => {
-          OrderService.newOrderHistoryItem(order).then((data) => {
-            if (data && data.message) {
-              setMessage({ msgBody: "Check your email and/or account page" });
-            }
-          });
+          if (authContext.isAuthenticated) {
+            OrderService.newOrderHistoryItem(order).then((data) => {
+              if (data && data.message) {
+                setMessage(data.message);
+              }
+            });
+          }
         });
       basketContext.setBasket(
         [...basketContext.basket].filter(
