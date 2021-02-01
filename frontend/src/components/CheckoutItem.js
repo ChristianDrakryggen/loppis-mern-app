@@ -54,7 +54,7 @@ const CheckoutItem = (props) => {
           OrderService.newOrderHistoryItem(order).then((data) => {
             if (data && data.message) {
               setMessage(
-                data.message.msgBody === "Unauthorized"
+                data === "Unauthorized"
                   ? { msgBody: "Check your email" }
                   : { msgBody: `${data.message.msgBody}, Check your email` }
               );
