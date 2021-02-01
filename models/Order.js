@@ -41,6 +41,7 @@ const OrderSchema = mongoose.Schema({
       count: { type: String },
     },
   ],
+  handled: { type: Boolean },
 });
 
 module.exports = mongoose.model("Order", OrderSchema);

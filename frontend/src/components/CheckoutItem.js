@@ -20,6 +20,7 @@ const CheckoutItem = (props) => {
     country: "",
     products: [],
     storeOwnerId: "",
+    handled: false,
   });
 
   const removeFromBasket = (product) => {

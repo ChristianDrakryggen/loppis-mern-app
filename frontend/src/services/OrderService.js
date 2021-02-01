@@ -62,4 +62,19 @@ export default {
       }
     });
   },
+  handleOrder: (order) => {
+    return fetch("/users/user/handleorder", {
+      method: "put",
+      body: JSON.stringify(order),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (res.status !== 401) {
+        return res.json().then((data) => data);
+      } else {
+        return { message: { msgBody: "Unauthorized", msgError: true } };
+      }
+    });
+  },
 };

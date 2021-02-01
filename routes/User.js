@@ -7,6 +7,10 @@ const User = require("../models/User");
 const Address = require("../models/Address");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const {
+  sendOrderConfirmedEmail,
+  sendOrderHandledEmail,
+} = require("../services/EmailService");
 
 /*---REGISTRATION, AUTHENTICATION & AUTHORIZATION---*/
 
@@ -340,6 +344,7 @@ userRouter.post("/user/neworder", (req, res) => {
                 message: { msgBody: "An error ocuurred", msgError: true },
               });
             } else {
+              sendOrderConfirmedEmail(req.body);
               res.status(200).json({
                 message: {
                   msgBody: "Successfully created order",
@@ -443,6 +448,26 @@ userRouter.post(
             msgBody: "Successfully removed order",
             mesError: false,
           },
+        });
+      }
+    });
+  }
+);
+
+//Handle order
+userRouter.put(
+  "/user/handleorder",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Order.findByIdAndUpdate(req.body._id, { handled: true }, (err) => {
+      if (err) {
+        res.status(500).json({
+          message: { msgBody: "An error occured", msgError: true },
+        });
+      } else {
+        sendOrderHandledEmail(req.body);
+        res.status(200).json({
+          message: { msgBody: "Successfully updated order", msgError: false },
         });
       }
     });

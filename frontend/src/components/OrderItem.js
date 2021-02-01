@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const OrderItem = (props) => {
-  const { order, removeOrder, orderHistory = false } = props;
+  const { order, removeOrder, handleOrder, orderHistory = false } = props;
   const [showOrder, setShowOrder] = useState(false);
   return (
     <>
@@ -30,6 +30,10 @@ const OrderItem = (props) => {
         {!orderHistory && (
           <button onClick={() => removeOrder(order)}>Remove</button>
         )}
+        {!order.handled && !orderHistory && (
+          <button onClick={() => handleOrder(order)}>Handle</button>
+        )}
+        {order.handled && <p>Handled</p>}
       </div>
       {showOrder && (
         <div

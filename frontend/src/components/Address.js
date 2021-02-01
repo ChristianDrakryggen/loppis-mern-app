@@ -23,6 +23,7 @@ const Address = (props) => {
       const { message } = data;
       if (!message.msgError) {
         AddressService.getAddress().then((data) => {
+          setAddingAddress(false);
           setAddress(data.address);
           setMessage(message);
         });
@@ -42,9 +43,9 @@ const Address = (props) => {
       const { message } = data;
       if (!message.msgError) {
         AddressService.getAddress().then((data) => {
+          setChangingAddress(false);
           setAddress(data.address);
           setMessage(message);
-          setChangingAddress(false);
         });
       } else if (message.msgBody === "Unauthorized") {
         setMessage(message);

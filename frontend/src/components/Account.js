@@ -59,6 +59,24 @@ const Account = () => {
     });
   };
 
+  const handleOrder = (order) => {
+    OrderService.handleOrder(order).then((data) => {
+      const { message } = data;
+      if (!message.msgError) {
+        OrderService.getOrders().then((data) => {
+          setOrders(data.orders);
+          setMessage(message);
+        });
+      } else if (message.msgBody === "Unauthorized") {
+        setMessage(message);
+        authContext.setUser({ username: "" });
+        authContext.setIsAuthenticated(false);
+      } else {
+        setMessage(message);
+      }
+    });
+  };
+
   useEffect(() => {
     if (authContext.user.username !== "") {
       ProductService.getMyProducts().then((data) => {
@@ -96,7 +114,10 @@ const Account = () => {
           removeProduct={removeProduct}
         />
         <div>
-          <p style={{ fontWeight: "bold" }}>Incoming orders</p>
+          <p style={{ fontWeight: "bold" }}>
+            Incoming orders (
+            {orders.filter((order) => order.handled === false).length})
+          </p>
           {orders
             .slice()
             .reverse()
@@ -105,6 +126,7 @@ const Account = () => {
                 key={order._id}
                 order={order}
                 removeOrder={removeOrder}
+                handleOrder={handleOrder}
               />
             ))}
         </div>
