@@ -53,7 +53,7 @@ const CheckoutItem = (props) => {
         .then(() => {
           OrderService.newOrderHistoryItem(order).then((data) => {
             if (data && data.message) {
-              setMessage("Check your email and/or account page");
+              setMessage({ msgBody: "Check your email and/or account page" });
             }
           });
         });
