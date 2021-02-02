@@ -89,7 +89,7 @@ const CheckoutItem = (props) => {
 
   return (
     <div style={{ borderBottom: "2px solid black", padding: "20px" }}>
-      <h3>{store.username}</h3>
+      <h3>{`${store.username}'s stand`}</h3>
       <div style={{ display: "flex" }}>
         <div style={{ width: "50%", marginRight: "2%" }}>
           {basketContext.basket

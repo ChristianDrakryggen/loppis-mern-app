@@ -3,7 +3,6 @@ import React, { createContext, useState, useEffect } from "react";
 export const BasketContext = createContext();
 
 export default ({ children }) => {
-  const [storageBasket, setStorageBasket] = useState([]);
   const [basket, setBasket] = useState([]);
   const [showBasket, setShowBasket] = useState(false);
 
