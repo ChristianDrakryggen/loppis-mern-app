@@ -52,6 +52,10 @@ const InsideStore = (props) => {
       price: parseInt(product.price),
     });
     basketContext.setBasket([...basketContext.basket, product]);
+    localStorage.setItem(
+      "storageBasket",
+      JSON.stringify([...basketContext.basket, product])
+    );
   };
 
   console.log(basketContext.basket);

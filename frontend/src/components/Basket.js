@@ -8,6 +8,12 @@ const Basket = () => {
     basketContext.setBasket(
       basketContext.basket.filter((item) => item._id !== product._id)
     );
+    localStorage.setItem(
+      "storageBasket",
+      JSON.stringify(
+        basketContext.basket.filter((item) => item._id !== product._id)
+      )
+    );
   };
 
   return (

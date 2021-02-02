@@ -1,10 +1,19 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 export const BasketContext = createContext();
 
 export default ({ children }) => {
+  const [storageBasket, setStorageBasket] = useState([]);
   const [basket, setBasket] = useState([]);
   const [showBasket, setShowBasket] = useState(false);
+
+  useEffect(() => {
+    let fromStorage = JSON.parse(localStorage.getItem("storageBasket"));
+    if (fromStorage) {
+      setBasket(fromStorage);
+    }
+    console.log(fromStorage);
+  }, [basket]);
 
   return (
     <div>
