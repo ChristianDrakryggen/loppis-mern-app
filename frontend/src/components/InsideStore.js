@@ -62,7 +62,7 @@ const InsideStore = (props) => {
 
   return (
     <div>
-      <h1>{store}</h1>
+      <h1>{`${store}'s store`}</h1>
       <h3>Products</h3>
       <div>
         {products.map((product) => (

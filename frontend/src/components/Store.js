@@ -17,7 +17,7 @@ const Store = (props) => {
         padding: "0px 20px 20px",
       }}
     >
-      <h1>{`${username}'s stand`}</h1>
+      <h1>{`${username}'s store`}</h1>
       <button onClick={() => goToStore(_id)}>To store</button>
     </div>
   );
