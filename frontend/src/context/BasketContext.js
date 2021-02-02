@@ -11,8 +11,7 @@ export default ({ children }) => {
     if (fromStorage) {
       setBasket(fromStorage);
     }
-    console.log(fromStorage);
-  }, [basket]);
+  }, []);
 
   return (
     <div>
